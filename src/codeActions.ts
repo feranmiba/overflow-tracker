@@ -19,9 +19,9 @@ export class SolidityOverflowCodeActionProvider implements vscode.CodeActionProv
       const lineIndex = diagnostic.range.start.line;
       const lineText = document.lineAt(lineIndex).text;
 
-      // 1. Universal Quick Fix: Dismiss / Ignore highlight on this line
+      // 1. Dismiss / Ignore highlight on this line
       const ignoreAction = new vscode.CodeAction(
-        '🚫 Ignore / Dismiss highlight on this line',
+        'Ignore / Dismiss highlight on this line',
         vscode.CodeActionKind.QuickFix
       );
       ignoreAction.diagnostics = [diagnostic];
@@ -31,9 +31,9 @@ export class SolidityOverflowCodeActionProvider implements vscode.CodeActionProv
       ignoreAction.edit = ignoreEdit;
       actions.push(ignoreAction);
 
-      // 2. Universal Quick Fix: Comment out / Remove highlighted line
+      // 2. Comment out highlighted line
       const removeLineAction = new vscode.CodeAction(
-        '✂️ Comment out highlighted line',
+        'Comment out highlighted line',
         vscode.CodeActionKind.QuickFix
       );
       removeLineAction.diagnostics = [diagnostic];
@@ -42,35 +42,7 @@ export class SolidityOverflowCodeActionProvider implements vscode.CodeActionProv
       removeLineAction.edit = removeEdit;
       actions.push(removeLineAction);
 
-      // 3. Quick Fix for CEI Reentrancy Violation (Move deduction before external call)
-      const codeStr = typeof diagnostic.code === 'string' ? diagnostic.code : '';
-      if (codeStr.includes('CEI_')) {
-        const ceiAction = new vscode.CodeAction(
-          '🔀 Fix CEI Pattern: Move balance deduction ABOVE external call',
-          vscode.CodeActionKind.QuickFix
-        );
-        ceiAction.diagnostics = [diagnostic];
-        ceiAction.isPreferred = true;
-        
-        // Find linked deduction line inside document
-        for (let i = lineIndex + 1; i < Math.min(lineIndex + 15, document.lineCount); i++) {
-          const lText = document.lineAt(i).text;
-          if (/\s*(-=|\s*=\s*.*-)/.test(lText) && /balance|shares|amount/i.test(lText)) {
-            const edit = new vscode.WorkspaceEdit();
-            const callLineRange = document.lineAt(lineIndex).rangeIncludingLineBreak;
-            const deductionLineRange = document.lineAt(i).rangeIncludingLineBreak;
-            
-            // Swap lines
-            edit.delete(document.uri, deductionLineRange);
-            edit.insert(document.uri, new vscode.Position(lineIndex, 0), lText + '\n');
-            ceiAction.edit = edit;
-            actions.push(ceiAction);
-            break;
-          }
-        }
-      }
-
-      // 4. Quick Fix for Unchecked Block
+      // 3. Quick Fix for Unchecked Block
       if (diagnostic.code === 'OVERFLOW_UNCHECKED_BLOCK') {
         const action = new vscode.CodeAction(
           'Remove unchecked block wrapper for checked math',
@@ -90,7 +62,7 @@ export class SolidityOverflowCodeActionProvider implements vscode.CodeActionProv
         }
       }
 
-      // 5. Quick Fix for Downcasting
+      // 4. Quick Fix for Downcasting
       if (diagnostic.code === 'DOWNCAST_TRUNCATION_RISK') {
         const wordRange = document.getWordRangeAtPosition(diagnostic.range.start);
         if (wordRange) {
@@ -108,7 +80,7 @@ export class SolidityOverflowCodeActionProvider implements vscode.CodeActionProv
 
     // Clear all diagnostics quick action
     const clearAllAction = new vscode.CodeAction(
-      '🧹 Clear all highlights in current document',
+      'Clear all highlights in current document',
       vscode.CodeActionKind.QuickFix
     );
     clearAllAction.command = {

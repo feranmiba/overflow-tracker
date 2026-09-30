@@ -86,7 +86,7 @@ export class SolidityOverflowLinter {
           lineIndex,
           cleanLine,
           diagnostics,
-          '🔥 Unchecked Math Risk: Arithmetic operation inside `unchecked` block bypasses Solidity 0.8+ overflow/underflow checks.',
+          'Unchecked Math Risk: Arithmetic operation inside `unchecked` block bypasses Solidity 0.8+ overflow/underflow checks.',
           vscode.DiagnosticSeverity.Warning,
           'OVERFLOW_UNCHECKED_BLOCK'
         );
@@ -98,7 +98,7 @@ export class SolidityOverflowLinter {
           lineIndex,
           cleanLine,
           diagnostics,
-          `🛡️ Missing SafeMath Shield: Solidity ${versionStr || '<0.8.0'} does not perform automatic overflow checks.`,
+          `Missing SafeMath Shield: Solidity ${versionStr || '<0.8.0'} does not perform automatic overflow checks.`,
           vscode.DiagnosticSeverity.Warning,
           'OVERFLOW_PRE_080_NO_SAFEMATH'
         );
@@ -123,7 +123,7 @@ export class SolidityOverflowLinter {
           `${pair.primaryEmoji} ${pair.primaryMessage}`,
           vscode.DiagnosticSeverity.Error
         );
-        diagA.code = `LINKED_MISCALCULATION_${pair.id}::${pair.primaryLabel}`;
+        diagA.code = `LINKED_${pair.riskType}_PRIMARY`;
         diagA.source = 'Overflow Tracker';
         diagnostics.push(diagA);
       }
@@ -135,7 +135,7 @@ export class SolidityOverflowLinter {
           `${pair.secondaryEmoji} ${pair.secondaryMessage}`,
           vscode.DiagnosticSeverity.Error
         );
-        diagB.code = `LINKED_MISCALCULATION_${pair.id}::${pair.secondaryLabel}`;
+        diagB.code = `LINKED_${pair.riskType}_SECONDARY`;
         diagB.source = 'Overflow Tracker';
         diagnostics.push(diagB);
       }
@@ -339,7 +339,7 @@ export class SolidityOverflowLinter {
 
       const diagnostic = new vscode.Diagnostic(
         range,
-        `✂️ Downcast Truncation Risk: Explicit integer cast to smaller type '${typeName}' may truncate values and cause silent overflow.`,
+        `Downcast Truncation Risk: Explicit integer cast to smaller type '${typeName}' may truncate values and cause silent overflow.`,
         vscode.DiagnosticSeverity.Information
       );
       diagnostic.code = 'DOWNCAST_TRUNCATION_RISK';

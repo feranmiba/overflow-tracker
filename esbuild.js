@@ -8,8 +8,8 @@ const config = {
   entryPoints: ['src/extension.ts'],
   bundle: true,
   format: 'cjs',
-  minify: isProduction,
-  sourcemap: !isProduction,
+  minify: false, // Turned off minification so code is transparent and un-obfuscated for VS Code Marketplace scanner
+  sourcemap: false,
   sourcesContent: false,
   platform: 'node',
   outfile: 'dist/extension.js',

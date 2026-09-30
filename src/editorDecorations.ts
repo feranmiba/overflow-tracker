@@ -47,29 +47,35 @@ export class EditorDecorationManager {
 
     for (const diag of diagnostics) {
       const codeStr = typeof diag.code === 'string' ? diag.code : '';
+      const message = diag.message;
 
-      if (codeStr.startsWith('LINKED_MISCALCULATION_')) {
-        const parts = codeStr.split('::');
-        const badgeLabel = parts.length > 1 ? parts[1] : diag.message;
+      if (codeStr.startsWith('LINKED_')) {
+        // Extract emoji and summary from diagnostic message
+        const emojiMatch = message.match(/^([\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}])/u);
+        const emoji = emojiMatch ? emojiMatch[1] : '⚠️';
 
-        // Determine specific theme color based on icon type
+        let badgeLabel = `${emoji} [Linked Risk]`;
         let badgeColor = '#ff4500';
         let bgColor = 'rgba(255, 69, 0, 0.18)';
         let borderColor = 'rgba(255, 69, 0, 0.6)';
 
-        if (badgeLabel.includes('🚨')) {
+        if (codeStr.includes('CEI_CALL_BEFORE_DEDUCTION_PRIMARY')) {
+          badgeLabel = '🚨 [CEI Violation] External Call executed BEFORE deduction';
           badgeColor = '#ff0033';
           bgColor = 'rgba(255, 0, 51, 0.2)';
           borderColor = 'rgba(255, 0, 51, 0.7)';
-        } else if (badgeLabel.includes('🔁')) {
+        } else if (codeStr.includes('CEI_CALL_BEFORE_DEDUCTION_SECONDARY')) {
+          badgeLabel = '🔁 [CEI Violation] Balance Deduction delayed AFTER call';
           badgeColor = '#ff4500';
           bgColor = 'rgba(255, 69, 0, 0.18)';
           borderColor = 'rgba(255, 69, 0, 0.6)';
-        } else if (badgeLabel.includes('⚖️')) {
+        } else if (codeStr.includes('CROSS_FUNCTION_BALANCE_FLOW_PRIMARY')) {
+          badgeLabel = '⚖️ [Unmatched Removal] Balance Deduction Linked';
           badgeColor = '#ff8c00';
           bgColor = 'rgba(255, 140, 0, 0.18)';
           borderColor = 'rgba(255, 140, 0, 0.6)';
-        } else if (badgeLabel.includes('💸')) {
+        } else if (codeStr.includes('CROSS_FUNCTION_BALANCE_FLOW_SECONDARY')) {
+          badgeLabel = '💸 [Unmatched Addition] Balance Addition Linked';
           badgeColor = '#e6a100';
           bgColor = 'rgba(230, 161, 0, 0.18)';
           borderColor = 'rgba(230, 161, 0, 0.6)';

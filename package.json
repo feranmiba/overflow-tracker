@@ -1,16 +1,32 @@
 {
-  "name": "overflow-tracker",
+  "name": "solidity-overflow-tracker",
   "displayName": "Solidity Overflow Tracker",
-  "description": "VS Code extension to detect, track, and highlight potential arithmetic overflow and underflow risks in Solidity smart contracts.",
+  "description": "Solidity smart contract linter for static code analysis.",
   "version": "0.0.1",
-  "publisher": "overflow-tracker",
+  "publisher": "AmiolaOluwademilade",
+  "author": {
+    "name": "Amiola Oluwademilade"
+  },
+  "license": "MIT",
+  "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/feranmiba/overflow-tracker.git"
+  },
+  "homepage": "https://github.com/feranmiba/overflow-tracker#readme",
+  "bugs": {
+    "url": "https://github.com/feranmiba/overflow-tracker/issues"
+  },
+  "keywords": [
+    "solidity",
+    "linter"
+  ],
   "engines": {
     "vscode": "^1.85.0"
   },
   "categories": [
     "Linters",
-    "Programming Languages",
-    "Other"
+    "Programming Languages"
   ],
   "main": "./dist/extension.js",
   "activationEvents": [
@@ -44,6 +60,8 @@
       }
     ],
     "configuration": {
+      "id": "overflowTracker",
+      "type": "object",
       "title": "Solidity Overflow Tracker",
       "properties": {
         "overflowTracker.enableRealTimeScanning": {

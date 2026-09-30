@@ -17,33 +17,25 @@ export class SolidityOverflowHoverProvider implements vscode.HoverProvider {
 
     const word = document.getText(range);
     const lineText = document.lineAt(position.line).text;
-    const lineNum = position.line + 1;
 
     // Hover logic for unchecked keyword or operators inside unchecked
     if (word === 'unchecked' || lineText.includes('unchecked')) {
       const markdown = new vscode.MarkdownString();
-      markdown.isTrusted = true;
       markdown.appendMarkdown('### 🔥 Solidity Overflow Tracker: Unchecked Math Risk\n\n');
       markdown.appendMarkdown(
-        'Wrapping code in `unchecked { ... }` explicitly **disables** Solidity 0.8+ overflow/underflow checks.\n\n'
+        'Wrapping code in `unchecked { ... }` explicitly disables Solidity 0.8+ overflow/underflow checks.\n\n'
       );
-      markdown.appendMarkdown('**Quick Actions:**\n');
-      markdown.appendMarkdown(`- [🚫 Ignore Highlight on Line ${lineNum}](command:overflow-tracker.ignoreLine?${encodeURIComponent(JSON.stringify([position.line]))})\n`);
-      markdown.appendMarkdown('- [🧹 Clear All Highlights](command:overflow-tracker.clearDiagnostics)\n');
+      markdown.appendMarkdown('**Recommendation:** Ensure inputs are strictly validated before executing unchecked math operations.');
       return new vscode.Hover(markdown, range);
     }
 
     // Hover logic for external transfer / CEI
     if (['call', 'transfer', 'send'].includes(word)) {
       const markdown = new vscode.MarkdownString();
-      markdown.isTrusted = true;
       markdown.appendMarkdown('### 🚨 Solidity Overflow Tracker: CEI / Reentrancy Risk\n\n');
       markdown.appendMarkdown(
-        'External call executed before balance state mutation. Ensure balance update occurs **before** external calls.\n\n'
+        'External call executed before balance state mutation. Ensure balance updates occur before external calls.'
       );
-      markdown.appendMarkdown('**Quick Actions:**\n');
-      markdown.appendMarkdown(`- [🚫 Ignore Highlight on Line ${lineNum}](command:overflow-tracker.ignoreLine?${encodeURIComponent(JSON.stringify([position.line]))})\n`);
-      markdown.appendMarkdown('- [🧹 Clear All Highlights](command:overflow-tracker.clearDiagnostics)\n');
       return new vscode.Hover(markdown, range);
     }
 
@@ -52,13 +44,10 @@ export class SolidityOverflowHoverProvider implements vscode.HoverProvider {
     if (downcastMatch) {
       const typeName = downcastMatch[0];
       const markdown = new vscode.MarkdownString();
-      markdown.isTrusted = true;
       markdown.appendMarkdown(`### ✂️ Explicit Downcasting (${typeName})\n\n`);
       markdown.appendMarkdown(
-        `Casting a larger integer to \`${typeName}\` truncates higher-order bits without runtime checks.\n\n`
+        `Casting a larger integer to \`${typeName}\` truncates higher-order bits without runtime checks.`
       );
-      markdown.appendMarkdown('**Quick Actions:**\n');
-      markdown.appendMarkdown(`- [🚫 Ignore Highlight on Line ${lineNum}](command:overflow-tracker.ignoreLine?${encodeURIComponent(JSON.stringify([position.line]))})\n`);
       return new vscode.Hover(markdown, range);
     }
 

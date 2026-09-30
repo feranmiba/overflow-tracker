@@ -6,3 +6,6 @@ tsconfig.json
 esbuild.js
 node_modules/**
 *.map
+dist/*.map
+sample.sol
+*.vsix

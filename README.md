@@ -1,38 +1,30 @@
-# Solidity Overflow Tracker (`overflow-tracker`)
+# Solidity Overflow Tracker
 
-A VS Code extension to detect, track, and highlight potential arithmetic overflow, underflow, and truncation risks in Solidity smart contracts.
+Solidity Overflow Tracker is a Visual Studio Code extension designed for Solidity smart contract developers. It performs real-time static analysis to identify potential arithmetic overflow, underflow, integer truncation, and Checks-Effects-Interactions (CEI) order risks.
 
 ## Features
 
-- 🔍 **Unchecked Block Detection (Solidity ≥0.8.0)**: Flags raw arithmetic operations inside `unchecked { ... }` blocks where built-in overflow protection is disabled.
-- ⚡ **Legacy Solidity Safeguard (Solidity <0.8.0)**: Detects contracts compiled for legacy Solidity versions missing automatic overflow checks when `SafeMath` is not imported or used.
-- 📉 **Downcasting Warning**: Highlights explicit integer casting down to smaller bit widths (e.g. `uint256` to `uint8` or `uint128`) that risk silent value truncation.
-- ⚡ **Real-time Diagnostics**: Continuously updates lint warnings and info diagnostics as you edit `.sol` files.
+- **Unchecked Block Detection**: Highlights arithmetic operations performed inside `unchecked { ... }` blocks in Solidity 0.8.0+.
+- **CEI Reentrancy Inspection**: Identifies external call operations performed before balance state deductions.
+- **Downcasting Truncation Analysis**: Warns on explicit downcasting (e.g. `uint256` to `uint8`) that may truncate values.
+- **Legacy Solidity Warnings**: Warns when raw arithmetic operators are used in pre-0.8.0 Solidity contracts without SafeMath.
+- **Real-Time Editor Decorations**: Displays real-time visual badges and inline highlights directly inside the editor.
 
-## Commands
+## Extension Commands
 
-- `Overflow Tracker: Scan Solidity File` (`overflow-tracker.scanFile`): Scans the active Solidity document and reports findings.
-- `Overflow Tracker: Clear Overflow Diagnostics` (`overflow-tracker.clearDiagnostics`): Clears all current overflow warnings in the editor.
+- `Overflow Tracker: Scan Solidity File` (`overflow-tracker.scanFile`): Manually triggers a full document scan.
+- `Overflow Tracker: Clear Overflow Diagnostics` (`overflow-tracker.clearDiagnostics`): Clears all current diagnostics and highlights.
+- `Overflow Tracker: Dismiss Highlight on Current Line` (`overflow-tracker.ignoreLine`): Suppresses highlights on the active line.
 
 ## Extension Settings
 
-This extension contributes the following settings under `overflowTracker`:
+This extension contributes the following settings:
 
-- `overflowTracker.enableRealTimeScanning`: Enable/disable background scanning on document edit.
-- `overflowTracker.warnUncheckedBlocks`: Enable/disable warnings for arithmetic inside `unchecked` blocks.
-- `overflowTracker.warnPre080WithoutSafeMath`: Enable/disable warnings for legacy Solidity contracts without SafeMath.
-- `overflowTracker.warnDowncasting`: Enable/disable downcasting truncation warnings.
+- `overflowTracker.enableRealTimeScanning`: Enables background document scanning on edit (default: `true`).
+- `overflowTracker.warnUncheckedBlocks`: Controls warnings for arithmetic inside `unchecked` blocks (default: `true`).
+- `overflowTracker.warnPre080WithoutSafeMath`: Controls warnings for legacy Solidity arithmetic without SafeMath (default: `true`).
+- `overflowTracker.warnDowncasting`: Controls downcasting truncation warnings (default: `true`).
 
-## Getting Started & Development
+## License
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Build extension:
-   ```bash
-   npm run build
-   ```
-3. Debug in VS Code:
-   - Press `F5` in VS Code to launch an Extension Development Host window.
-   - Open `sample.sol` to see real-time overflow diagnostics in action!
+MIT License. See LICENSE file for details.
