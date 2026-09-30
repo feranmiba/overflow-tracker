@@ -1,0 +1,88 @@
+{
+  "name": "overflow-tracker",
+  "displayName": "Solidity Overflow Tracker",
+  "description": "VS Code extension to detect, track, and highlight potential arithmetic overflow and underflow risks in Solidity smart contracts.",
+  "version": "0.0.1",
+  "publisher": "overflow-tracker",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Linters",
+    "Programming Languages",
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onLanguage:solidity"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "overflow-tracker.scanFile",
+        "title": "Overflow Tracker: Scan Solidity File"
+      },
+      {
+        "command": "overflow-tracker.clearDiagnostics",
+        "title": "Overflow Tracker: Clear Overflow Diagnostics"
+      },
+      {
+        "command": "overflow-tracker.ignoreLine",
+        "title": "Overflow Tracker: Dismiss Highlight on Current Line"
+      }
+    ],
+    "languages": [
+      {
+        "id": "solidity",
+        "extensions": [
+          ".sol"
+        ],
+        "aliases": [
+          "Solidity",
+          "solidity"
+        ]
+      }
+    ],
+    "configuration": {
+      "title": "Solidity Overflow Tracker",
+      "properties": {
+        "overflowTracker.enableRealTimeScanning": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable real-time scanning for overflow/underflow risks on typing."
+        },
+        "overflowTracker.warnUncheckedBlocks": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn when arithmetic operations are performed inside 'unchecked' blocks in Solidity >=0.8.0."
+        },
+        "overflowTracker.warnPre080WithoutSafeMath": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn when raw arithmetic operators (+, -, *, **) are used in Solidity <0.8.0."
+        },
+        "overflowTracker.warnDowncasting": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn on explicit integer downcasting (e.g., uint256 to uint8) that may overflow/truncate."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "tsc -p ./",
+    "watch": "tsc -w -p ./",
+    "build": "node esbuild.js",
+    "watch-esbuild": "node esbuild.js --watch",
+    "package": "node esbuild.js --production",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.3.3"
+  }
+}
